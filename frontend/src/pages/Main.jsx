@@ -1,6 +1,6 @@
 import React from "react";
-import Header from "../components/quiz/Header";
-import List from "../components/quiz/List";
+import Header from "../components/trivia/Header";
+import List from "../components/trivia/List";
 
 const Main = () => {
   const data = [
