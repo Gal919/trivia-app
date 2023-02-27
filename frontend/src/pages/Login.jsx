@@ -1,12 +1,20 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { getTriviaData } from "../redux/triviaDataReducer";
 
 const Login = () => {
   const [name, setName] = useState("");
 
+  const dispatch = useDispatch();
+
   const handleChange = (e) => {
     e.preventDefault();
     setName(e.target.value);
+  };
+
+  const handleStartClick = () => {
+    //dispatch(getTriviaData());
   };
 
   return (
@@ -17,7 +25,9 @@ const Login = () => {
         type="text"
         value={name}
       />
-      <Link to={"main"}>Start</Link>
+      <Link onClick={handleStartClick} to={"main"}>
+        Start
+      </Link>
     </div>
   );
 };

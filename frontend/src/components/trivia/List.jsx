@@ -1,44 +1,68 @@
-import { useState } from "react";
-import Button from "../UI/Button";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getTriviaData } from "../../redux/triviaDataReducer";
+import * as S from "../../styles/List";
 import Question from "./Question";
 import Answer from "./Answer";
-import * as S from "../../styles/List";
 
-const List = ({ data }) => {
-  const [currentQue, setCurrentQue] = useState(0);
+const List = () => {
+  const { data, loading, success, error } = useSelector(
+    (state) => state.triviaData
+  );
+  const queIndex = useSelector((state) => state.triviaData.index);
+  const dispatch = useDispatch();
 
-  const clickHandler = () => {
-    if (data[currentQue].incorrectAnswers.length + 1 === currentQue) {
-      setCurrentQue(0);
-    } else {
-      setCurrentQue(currentQue + 1);
-    }
+  useEffect(() => {
+    dispatch(getTriviaData());
+  }, []);
+
+  const createAnsArr = (incorrectAns, correctAns) => {
+    const incorrectAnsObj = incorrectAns.map((ans) => ({
+      id: createId(),
+      value: ans,
+      isCorrect: false,
+    }));
+    const correctAnsObj = {
+      id: createId(),
+      value: correctAns,
+      isCorrect: true,
+    };
+
+    return [...incorrectAnsObj, correctAnsObj];
   };
 
-  const shuffleAns = (incorrectAns, correctAns) => {
-    const incorrectWithKey = incorrectAns.map((v) => ({ v, isCorrect: false }));
-    const correctWithKey = { v: correctAns, isCorrect: true };
-    let ansArr = [];
-    ansArr = [...incorrectWithKey, correctWithKey];
+  const createId = () => {
+    return Math.floor(Math.random() * 100000);
+  };
 
-    ansArr.sort(() => Math.random() - 0.5);
-    return ansArr;
+  const shuffleAns = (arr) => {
+    arr.sort(() => Math.random() - 0.5);
+    return arr;
   };
 
   return (
     <S.Container>
-      <Question text={data[currentQue].question} />
-      {shuffleAns(
-        data[currentQue].incorrectAnswers,
-        data[currentQue].correctAnswer
-      ).map((ans) => (
-        <Answer
-          text={ans.v}
-          status={ans.isCorrect ? "correct" : "incorrect"}
-          currentQue={currentQue}
-        />
-      ))}
-      <Button onClick={clickHandler}>Next</Button>
+      {loading ? (
+        <p style={{ color: "white" }}>loading...</p>
+      ) : (
+        <>
+          {success && <Question text={data?.[queIndex]?.question} />}
+          {success &&
+            shuffleAns(
+              createAnsArr(
+                data[queIndex].incorrectAnswers,
+                data[queIndex].correctAnswer
+              )
+            ).map((ans) => (
+              <Answer
+                key={ans.id}
+                text={ans.value}
+                status={ans.isCorrect ? "correct" : "incorrect"}
+                currentQue={queIndex}
+              />
+            ))}
+        </>
+      )}
     </S.Container>
   );
 };
