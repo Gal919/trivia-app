@@ -8,7 +8,7 @@ export const GlobalStyles = createGlobalStyle`
     
     body {
         background: linear-gradient(135deg, #28313B, #485461);
+        background-size:cover;
         margin: 0;
-        height:100vh;
     };
 `;
