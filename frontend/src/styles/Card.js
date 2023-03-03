@@ -8,7 +8,7 @@ export const Card = styled.div`
   text-align: center;
   font-size: 20px;
   border-radius: 12px;
-  color: #ffffff;
+  color: ${(props) => (props.variant === "disabled" ? "#777478" : "#ffffff")};
   background-color: #28313b;
   border: 2px solid
     ${(props) =>
@@ -21,6 +21,7 @@ export const Card = styled.div`
         : "#777478"};
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   cursor: ${(props) => (props.clickable ? "pointer" : "auto")};
+  pointer-events: ${(props) => (props.clickable ? "auto" : "none")};
 
   &:hover {
     transform: ${(props) => (props.clickable ? "scale(1.01)" : "none")};
