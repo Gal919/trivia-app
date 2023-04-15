@@ -7,11 +7,12 @@ export const Container = styled.div`
 `;
 
 export const Button = styled.button`
-  padding: 5px 30px;
-  background-color: transparent;
-  font-size: 20px;
-  border-radius: 10px;
-  border: 1px solid #ffffff;
-  color: #ffffff;
+  background-color: #4c87d6;
+  margin-top: 5px;
+  border: none;
+  border-radius: 50px;
+  font-size: 17px;
+  padding: 7px 20px;
   cursor: pointer;
+  color: #ffffff;
 `;

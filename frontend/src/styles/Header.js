@@ -3,10 +3,9 @@ import styled from "styled-components";
 export const Container = styled.div`
   display: flex;
   justify-content: center;
-  margin: 1rem;
+  margin-bottom: 20px;
 
   h1 {
     text-align: center;
-    color: #ffffff;
   }
 `;
