@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Header from "../UI/Header";
 import { Button } from "../../styles/Button";
 import * as S from "../../styles/Form";
+import useFetch from "../../hooks/useFetch";
 
 const Signup = () => {
   const [userInfo, setUserInfo] = useState({
@@ -10,6 +11,8 @@ const Signup = () => {
     email: "",
     password: "",
   });
+
+  const [errorPost, sendPostRequest] = useFetch();
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -21,31 +24,7 @@ const Signup = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const { username, email, password } = userInfo;
-
-    fetch("http://localhost:5000/api/register", {
-      method: "POST",
-      crossDomain: true,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify({
-        username,
-        email,
-        password,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data, "userRegister");
-        if (data.status === "ok") {
-          alert("Registration Successful");
-        } else {
-          alert("Something went wrong");
-        }
-      });
+    sendPostRequest("http://localhost:5000/api/register", "POST", userInfo);
   };
 
   return (
