@@ -25,8 +25,7 @@ export const Label = styled.label`
   margin-top: 10px;
 `;
 
-export const Link = {
-  textDecoration: "none",
+export const Button = {
   marginTop: "30px",
   position: "absolute",
   bottom: "0",
