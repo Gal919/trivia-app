@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import Login from "../components/auth/Login";
 import Signup from "../components/auth/Signup";
 import * as S from "../styles/Main";
 
 const Main = () => {
+  const [isSignupPage, setIsSignupPage] = useState(false);
+
   return (
     <S.Container>
       <S.LeftContainer>
@@ -13,7 +15,13 @@ const Main = () => {
           <i className="fa-solid fa-medal"></i>
         </h1>
       </S.LeftContainer>
-      <S.RightContainer>{true ? <Signup /> : <Login />}</S.RightContainer>
+      <S.RightContainer>
+        {isSignupPage ? (
+          <Signup setIsSignupPage={setIsSignupPage} />
+        ) : (
+          <Login setIsSignupPage={setIsSignupPage} />
+        )}
+      </S.RightContainer>
     </S.Container>
   );
 };
