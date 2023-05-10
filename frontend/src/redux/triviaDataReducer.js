@@ -55,7 +55,7 @@ export const triviaDataReducer = createSlice({
         state.success = true;
       })
       .addCase(getTriviaData.rejected, (state, action) => {
-        state.loading = true;
+        state.loading = false;
         state.error = true;
         state.message = action.payload;
         state.data = [];
