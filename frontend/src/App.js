@@ -13,7 +13,7 @@ function App() {
       element: <Main />,
     },
     {
-      path: "/main",
+      path: "/trivia",
       element: <Trivia />,
     },
   ]);
