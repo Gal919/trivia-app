@@ -25,7 +25,7 @@ const insertUser = async (req, res) => {
 
     res.send({ status: "ok", token: token });
   } catch (error) {
-    res.send({ status: "error" });
+    res.send({ error: "Some error has occurred" });
   }
 };
 
@@ -47,7 +47,10 @@ const userLogin = async (req, res) => {
     }
   }
 
-  return res.json({ status: "error", error: "Invalid Password" });
+  return res.json({
+    status: "error",
+    error: "Please provide valid email address and password",
+  });
 };
 
 //user data controller
