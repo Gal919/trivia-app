@@ -2,8 +2,30 @@ import styled from "styled-components";
 
 export const Form = styled.form`
   display: flex;
+  position: relative;
   flex-direction: column;
   min-width: 80%;
+`;
+
+export const Link = styled.div`
+  display: flex;
+  position: absolute;
+  margin-bottom: 20px;
+  bottom: 0;
+
+  p:last-child {
+    margin-left: 10px;
+    text-decoration: underline;
+    color: #4c87d6;
+    font-weight: bold;
+    cursor: pointer;
+  }
+`;
+
+export const Error = styled.span`
+  font-size: 14px;
+  color: #f03c2a;
+  margin: 5px 0 0 7px;
 `;
 
 export const Input = styled.input`
