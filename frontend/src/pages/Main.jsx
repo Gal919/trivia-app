@@ -10,10 +10,10 @@ const Main = () => {
     <S.Container>
       <S.LeftContainer>
         <h1>Welcome To</h1>
-        <h1>
-          Trivia App
+        <div className="text-wrapper">
+          <h1>Trivia App</h1>
           <i className="fa-solid fa-medal"></i>
-        </h1>
+        </div>
       </S.LeftContainer>
       <S.RightContainer>
         {isSignupPage ? (
