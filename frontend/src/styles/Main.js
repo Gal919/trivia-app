@@ -10,20 +10,29 @@ export const LeftContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 50%;
-  overflow-wrap: anywhere;
+  padding-top: 20px;
 
-  h1 {
-    font-size: 40px;
-    margin-bottom: 20px;
+  .text-wrapper {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
 
-    &:last-of-type {
-      margin-left: 60px;
+    h1 {
+      font-size: 40px;
+
+      &:last-of-type {
+        margin-left: 60px;
+      }
     }
 
     i {
-      font-size: 35px;
-      margin-left: 10px;
+      font-size: 30px;
+      margin: 10px 0 0 10px;
     }
+  }
+
+  h1 {
+    font-size: 40px;
   }
 `;
 
