@@ -49,7 +49,7 @@ const Login = ({ setIsSignupPage }) => {
     }
   };
 
-  const handleLogin = () => {
+  const handleSignup = () => {
     setIsSignupPage(true);
   };
 
@@ -64,9 +64,9 @@ const Login = ({ setIsSignupPage }) => {
 
   return (
     <>
-      <Header text="Login" />
+      <Header title="Login" />
       <S.Form id="loginForm" onSubmit={handleSubmit}>
-        <S.Label>email</S.Label>
+        <S.Label>Email</S.Label>
         <S.Input
           type="text"
           name="email"
@@ -75,7 +75,7 @@ const Login = ({ setIsSignupPage }) => {
           onChange={handleChange}
           autoComplete="on"
         />
-        <span>{formError.email}</span>
+        <S.Error>{formError.email}</S.Error>
         <S.Label>Password</S.Label>
         <S.Input
           type="password"
@@ -85,14 +85,16 @@ const Login = ({ setIsSignupPage }) => {
           onChange={handleChange}
           autoComplete="on"
         />
-        <span>{formError.password}</span>
+        <S.Error>{formError.password}</S.Error>
       </S.Form>
-      <p>Don't have an account?</p>
       {loginError.length > 0 && <p>{loginError}</p>}
-      <button onClick={handleLogin}>Sign Up</button>
       <Button form="loginForm" style={S.Button}>
         Start
       </Button>
+      <S.Link>
+        <p>Don't have an account?</p>
+        <p onClick={handleSignup}>Sign Up</p>
+      </S.Link>
     </>
   );
 };
