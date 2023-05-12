@@ -1,9 +1,10 @@
 import * as S from "../../styles/Header";
 
-const Header = ({ text }) => {
+const Header = ({ title, subTitle }) => {
   return (
     <S.Container className="header-container">
-      <h1>{text}</h1>
+      <h1>{title}</h1>
+      <h2>{subTitle}</h2>
     </S.Container>
   );
 };
