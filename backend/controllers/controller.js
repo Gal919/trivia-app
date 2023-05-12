@@ -5,18 +5,18 @@ const generateToken = require("../utils/generateToken");
 
 //register controller
 const insertUser = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { name, email, password } = req.body;
   const encryptedPassword = await bcrypt.hash(password, 10);
 
   try {
     const currentUser = await User.findOne({ email });
 
     if (currentUser) {
-      return res.json({ error: "User already exist" });
+      return res.status(400).json({ error: "User already exist" });
     }
 
     const user = await User.create({
-      username,
+      name,
       email,
       password: encryptedPassword,
     });
@@ -35,7 +35,7 @@ const userLogin = async (req, res) => {
 
   const user = await User.findOne({ email });
   if (!user) {
-    return res.json({ error: "User Not Found" });
+    return res.status(400).json({ error: "User Not Found" });
   }
   if (await bcrypt.compare(password, user.password)) {
     const token = generateToken(user);
@@ -43,11 +43,11 @@ const userLogin = async (req, res) => {
     if (res.status(201)) {
       return res.json({ status: "ok", token: token });
     } else {
-      return res.json({ error: "error" });
+      return res.status(400).json({ error: "error" });
     }
   }
 
-  return res.json({
+  return res.status(401).json({
     status: "error",
     error: "Please provide valid email address and password",
   });
