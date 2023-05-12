@@ -1,10 +1,10 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import triviaDataReducer from "./triviaDataReducer";
-import userDataReducer from "./userDataReducer";
+import authReducer from "./authReducer";
 
 const rootReducer = combineReducers({
   triviaData: triviaDataReducer,
-  userData: userDataReducer,
+  auth: authReducer,
 });
 
 export default configureStore({ reducer: rootReducer });
