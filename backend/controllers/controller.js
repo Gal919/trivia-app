@@ -49,7 +49,7 @@ const userLogin = async (req, res) => {
 
   return res.status(401).json({
     status: "error",
-    error: "Please provide valid email address and password",
+    error: "Please provide valid password",
   });
 };
 
