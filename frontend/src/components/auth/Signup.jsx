@@ -1,24 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useFetch from "../../hooks/useFetch";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../../redux/authReducer";
 import * as S from "../../styles/Form";
 import Button from "../UI/Button";
 import Header from "../UI/Header";
+import { validateForm } from "./utils";
 
 const Signup = ({ setIsSignupPage }) => {
   const [userInfo, setUserInfo] = useState({
-    username: "",
+    name: "",
     email: "",
     password: "",
   });
-  const [signupError, setSignupError] = useState("");
   const [formError, setFormError] = useState({});
-  const [errorPost, sendPostRequest] = useFetch();
+  const auth = useSelector((state) => state.auth);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    setSignupError("");
-  }, [userInfo.email]);
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -27,45 +25,16 @@ const Signup = ({ setIsSignupPage }) => {
     setUserInfo((prev) => ({ ...prev, [name]: value }));
   };
 
-  const onCreateUser = (data) => {
-    if (data.status === "ok") {
-      navigate("/trivia");
-    } else {
-      setSignupError(data.error);
-    }
-  };
-
-  const validateForm = () => {
-    let err = {};
-
-    if (userInfo.username.trim() === "") {
-      err.username = "Please enter username";
-    }
-
-    if (userInfo.email.trim() === "") {
-      err.email = "Please enter email";
-    }
-
-    if (userInfo.password.trim() === "") {
-      err.password = "Please enter password";
-    }
-
-    setFormError({ ...err });
-
-    return Object.keys(err).length < 1;
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    let isValid = validateForm();
+    let isValid = validateForm(userInfo, setFormError);
 
     if (isValid) {
-      sendPostRequest(
-        "http://localhost:5000/api/register",
-        "POST",
-        userInfo,
-        onCreateUser
-      );
+      dispatch(registerUser(userInfo));
+      if (auth.registerStatus === "success") {
+        window.localStorage.setItem("token", auth.token);
+        navigate("/trivia");
+      }
     }
   };
 
@@ -80,13 +49,13 @@ const Signup = ({ setIsSignupPage }) => {
         <S.Label>Username</S.Label>
         <S.Input
           type="text"
-          name="username"
+          name="name"
           placeholder="Please enter username"
-          value={userInfo.username}
+          value={userInfo.name}
           onChange={handleChange}
           autoComplete="on"
         />
-        <S.Error>{formError.username}</S.Error>
+        <S.Error>{formError.name}</S.Error>
         <S.Label>Email</S.Label>
         <S.Input
           type="email"
@@ -108,7 +77,9 @@ const Signup = ({ setIsSignupPage }) => {
         />
         <S.Error>{formError.password}</S.Error>
       </S.Form>
-      {signupError.length > 0 && <p>{signupError}</p>}
+      {auth.registerStatus === "rejected" ? (
+        <S.Error>{auth.registerError.error}</S.Error>
+      ) : null}
       <Button form="singUpForm" type="submit">
         Sign Up
       </Button>

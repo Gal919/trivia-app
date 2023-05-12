@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useFetch from "../../hooks/useFetch";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../../redux/authReducer";
 import * as S from "../../styles/Form";
 import Button from "../UI/Button";
 import Header from "../UI/Header";
+import { validateForm } from "./utils";
 
 const Login = ({ setIsSignupPage }) => {
   const [userInfo, setUserInfo] = useState({ email: "", password: "" });
-  const [loginError, setLoginError] = useState("");
   const [formError, setFormError] = useState({});
-  const [errorPost, sendPostRequest] = useFetch();
+  const auth = useSelector((state) => state.auth);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -19,47 +21,21 @@ const Login = ({ setIsSignupPage }) => {
     setUserInfo((prev) => ({ ...prev, [name]: value }));
   };
 
-  const validateForm = () => {
-    let err = {};
-
-    if (userInfo.email.trim() === "") {
-      err.email = "Please enter email";
-    }
-
-    if (userInfo.password.trim() === "") {
-      err.password = "Please enter password";
-    }
-
-    setFormError({ ...err });
-
-    return Object.keys(err).length < 1;
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    let isValid = validateForm();
+    let isValid = validateForm(userInfo, setFormError);
 
     if (isValid) {
-      sendPostRequest(
-        "http://localhost:5000/api/login",
-        "POST",
-        userInfo,
-        saveUserData
-      );
+      dispatch(loginUser(userInfo));
+      if (auth.loginStatus === "success") {
+        window.localStorage.setItem("token", auth.token);
+        navigate("/trivia");
+      }
     }
   };
 
   const handleSignup = () => {
     setIsSignupPage(true);
-  };
-
-  const saveUserData = (data) => {
-    if (data.status === "ok") {
-      window.localStorage.setItem("token", data.token);
-      navigate("/trivia");
-    } else {
-      setLoginError(data.error);
-    }
   };
 
   return (
@@ -87,7 +63,9 @@ const Login = ({ setIsSignupPage }) => {
         />
         <S.Error>{formError.password}</S.Error>
       </S.Form>
-      {loginError.length > 0 && <p>{loginError}</p>}
+      {auth.loginStatus === "rejected" ? (
+        <S.Error>{auth.loginError.error}</S.Error>
+      ) : null}
       <Button form="loginForm" style={S.Button}>
         Start
       </Button>
