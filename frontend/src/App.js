@@ -5,6 +5,7 @@ import { GlobalStyles } from "./styles/Global";
 import Main from "./pages/Main";
 import Trivia from "./pages/Trivia";
 import store from "./redux/store";
+import Result from "./pages/Result";
 
 function App() {
   const router = createBrowserRouter([
@@ -15,6 +16,10 @@ function App() {
     {
       path: "/trivia",
       element: <Trivia />,
+    },
+    {
+      path: "/result",
+      element: <Result />,
     },
   ]);
 
