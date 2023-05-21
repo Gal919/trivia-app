@@ -1,22 +1,19 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ReactLoading from "react-loading";
 import { getTriviaData } from "../../redux/triviaDataReducer";
 import * as S from "../../styles/List";
 import Question from "./Question";
 import Answer from "./Answer";
+import { createId, shuffleAns } from "./utils";
 
-const List = () => {
+const List = ({ data, index, error, setPoints }) => {
   const [questionsList, setQuestionsList] = useState({});
-  const { data, loading, success, error } = useSelector(
-    (state) => state.triviaData
-  );
-  const queIndex = useSelector((state) => state.triviaData.index);
-  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getTriviaData());
-  }, [dispatch]);
+    updateNextQue();
+  }, []);
 
   const createAnsArr = useCallback((incorrectAns, correctAns) => {
     const incorrectAnsObj = incorrectAns.map((ans) => ({
@@ -37,70 +34,51 @@ const List = () => {
     return [...incorrectAnsObj, correctAnsObj];
   }, []);
 
-  useEffect(() => {
-    if (success) {
-      const ansArr = shuffleAns(
-        createAnsArr(
-          data[queIndex].incorrectAnswers,
-          data[queIndex].correctAnswer
-        )
-      );
+  const updateNextQue = () => {
+    const ansArr = shuffleAns(
+      createAnsArr(data[index].incorrectAnswers, data[index].correctAnswer)
+    );
 
-      setQuestionsList({
-        question: data[queIndex].question,
-        answers: [...ansArr],
-      });
-    }
-  }, [success, data, queIndex, createAnsArr]);
-
-  const createId = () => {
-    return Math.floor(Math.random() * 100000);
-  };
-
-  const shuffleAns = (arr) => {
-    arr.sort(() => Math.random() - 0.5);
-    return arr;
+    setQuestionsList({
+      question: data[index].question,
+      answers: [...ansArr],
+    });
   };
 
   const updateCellStatus = (id) => {
-    console.log(id);
     const updatedList = { ...questionsList };
     updatedList.answers.forEach((ans) => {
       if (ans.id === id) {
-        ans.isCorrect ? (ans.status = "correct") : (ans.status = "incorrect");
-        ans.clickable = false;
+        if (ans.isCorrect) {
+          setPoints((prev) => prev + 1);
+          ans.status = "correct";
+        } else {
+          ans.status = "incorrect";
+        }
       } else {
         ans.status = "disabled";
-        ans.clickable = false;
       }
+      ans.clickable = false;
     });
-    console.log(updatedList);
     setQuestionsList(updatedList);
   };
 
   return (
     <S.Container>
-      {loading ? (
-        <ReactLoading type="bubbles" color="#ffffff" height={64} width={64} />
-      ) : (
-        <>
-          {questionsList?.question && (
-            <Question text={questionsList.question} />
-          )}
-          {questionsList?.answers?.length > 0 &&
-            questionsList.answers.map((ans) => (
-              <Answer
-                key={ans.id}
-                id={ans.id}
-                text={ans.value}
-                status={ans.status}
-                currentQue={queIndex}
-                clickable={ans.clickable}
-                updateStatus={updateCellStatus}
-              />
-            ))}
-        </>
-      )}
+      {questionsList?.question && <Question text={questionsList.question} />}
+      {questionsList?.answers?.length > 0 &&
+        questionsList.answers.map((ans) => (
+          <Answer
+            key={ans.id}
+            id={ans.id}
+            text={ans.value}
+            status={ans.status}
+            currentQue={index}
+            clickable={ans.clickable}
+            updateStatus={updateCellStatus}
+            updateNextQue={updateNextQue}
+          />
+        ))}
     </S.Container>
   );
 };
