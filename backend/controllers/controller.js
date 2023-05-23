@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
+const Result = require("../models/resultModal");
 const generateToken = require("../utils/generateToken");
 
 //register controller
@@ -53,18 +53,17 @@ const userLogin = async (req, res) => {
   });
 };
 
-//user data controller
-const userData = async (req, res) => {
-  const { token } = req.body;
+//result controller
+const insertResult = async (req, res) => {
+  const { email, score } = req.body;
 
   try {
-    const user = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    const useremail = user.email;
-    const userData = await User.findOne({ email: useremail });
-    res.send({ status: "ok", data: userData });
+    const result = new Result({ email, score });
+    const resultData = await result.save();
+    res.json({ status: "ok", scoreData: resultData });
   } catch (error) {
-    res.send({ status: "error", data: error });
+    res.json({ error: "Some error has occurred" });
   }
 };
 
-module.exports = { insertUser, userLogin, userData };
+module.exports = { insertUser, userLogin, insertResult };
