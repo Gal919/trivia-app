@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../redux/authReducer";
+import { reset, loginUser } from "../../redux/authReducer";
 import * as S from "../../styles/Form";
 import Button from "../UI/Button";
 import Header from "../UI/Header";
@@ -10,9 +10,15 @@ import { validateForm } from "./utils";
 const Login = ({ setIsSignupPage }) => {
   const [userInfo, setUserInfo] = useState({ email: "", password: "" });
   const [formError, setFormError] = useState({});
-  const auth = useSelector((state) => state.auth);
+  const { loginStatus, loginError } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (loginStatus === "success") {
+      navigate("/trivia");
+    }
+  }, [loginStatus, navigate]);
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -27,10 +33,6 @@ const Login = ({ setIsSignupPage }) => {
 
     if (isValid) {
       dispatch(loginUser(userInfo));
-      if (auth.loginStatus === "success") {
-        window.localStorage.setItem("token", auth.token);
-        navigate("/trivia");
-      }
     }
   };
 
@@ -63,8 +65,8 @@ const Login = ({ setIsSignupPage }) => {
         />
         <S.Error>{formError.password}</S.Error>
       </S.Form>
-      {auth.loginStatus === "rejected" ? (
-        <S.Error>{auth.loginError.error}</S.Error>
+      {loginStatus === "rejected" ? (
+        <S.Error>{loginError.error}</S.Error>
       ) : null}
       <Button form="loginForm" style={S.Button}>
         Start

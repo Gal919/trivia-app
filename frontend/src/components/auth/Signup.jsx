@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../redux/authReducer";
@@ -14,9 +14,15 @@ const Signup = ({ setIsSignupPage }) => {
     password: "",
   });
   const [formError, setFormError] = useState({});
-  const auth = useSelector((state) => state.auth);
+  const { registerStatus, registerError } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (registerStatus === "success") {
+      navigate("/trivia");
+    }
+  }, [navigate, registerStatus]);
 
   const handleChange = (e) => {
     e.preventDefault();
@@ -31,10 +37,6 @@ const Signup = ({ setIsSignupPage }) => {
 
     if (isValid) {
       dispatch(registerUser(userInfo));
-      if (auth.registerStatus === "success") {
-        window.localStorage.setItem("token", auth.token);
-        navigate("/trivia");
-      }
     }
   };
 
@@ -77,8 +79,8 @@ const Signup = ({ setIsSignupPage }) => {
         />
         <S.Error>{formError.password}</S.Error>
       </S.Form>
-      {auth.registerStatus === "rejected" ? (
-        <S.Error>{auth.registerError.error}</S.Error>
+      {registerStatus === "rejected" ? (
+        <S.Error>{registerError.error}</S.Error>
       ) : null}
       <Button form="singUpForm" type="submit">
         Sign Up
