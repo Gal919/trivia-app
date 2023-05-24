@@ -65,9 +65,7 @@ const Login = ({ setIsSignupPage }) => {
         />
         <S.Error>{formError.password}</S.Error>
       </S.Form>
-      {loginStatus === "rejected" ? (
-        <S.Error>{loginError.error}</S.Error>
-      ) : null}
+      {loginStatus === "rejected" && <S.Error>{loginError.error}</S.Error>}
       <Button form="loginForm" style={S.Button}>
         Start
       </Button>

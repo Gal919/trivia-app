@@ -79,9 +79,9 @@ const Signup = ({ setIsSignupPage }) => {
         />
         <S.Error>{formError.password}</S.Error>
       </S.Form>
-      {registerStatus === "rejected" ? (
+      {registerStatus === "rejected" && (
         <S.Error>{registerError.error}</S.Error>
-      ) : null}
+      )}
       <Button form="singUpForm" type="submit">
         Sign Up
       </Button>
