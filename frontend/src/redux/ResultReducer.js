@@ -4,6 +4,7 @@ import axios from "axios";
 const initialState = {
   email: "",
   score: 0,
+  highestScore: 0,
   resultStatus: "",
 };
 
@@ -35,8 +36,9 @@ const ResultReducer = createSlice({
     builder.addCase(insertResult.fulfilled, (state, action) => {
       return {
         ...state,
-        email: action.payload.scoreData.email,
-        score: action.payload.scoreData.score,
+        email: action.payload.email,
+        score: action.payload.currentScore,
+        highestScore: action.payload.highestScore,
         resultStatus: "fulfilled",
       };
     });

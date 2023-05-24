@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 const resultModel = new mongoose.Schema({
   email: { type: String, unique: true },
-  score: Number,
+  currentScore: Number,
+  highestScore: Number,
 });
 
 module.exports = mongoose.model("Result", resultModel);

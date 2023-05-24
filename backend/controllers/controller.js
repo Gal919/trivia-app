@@ -33,24 +33,24 @@ const insertUser = async (req, res) => {
 const userLogin = async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
-  if (!user) {
-    return res.status(400).json({ error: "User Not Found" });
-  }
-  if (await bcrypt.compare(password, user.password)) {
-    const token = generateToken(user);
+  try {
+    const user = await User.findOne({ email });
 
-    if (res.status(201)) {
-      return res.json({ status: "ok", token: token });
-    } else {
-      return res.status(400).json({ error: "error" });
+    if (!user) {
+      return res.status(400).json({ error: "User Not Found" });
     }
-  }
 
-  return res.status(401).json({
-    status: "error",
-    error: "Please provide valid password",
-  });
+    bcrypt.compare(password, user.password, (_, isValid) => {
+      if (isValid) {
+        const token = generateToken(user);
+        return res.json({ status: "ok", token: token });
+      } else {
+        return res.status(400).json({ error: "Please provide valid password" });
+      }
+    });
+  } catch (error) {
+    res.send({ error: "Some error has occurred" });
+  }
 };
 
 //result controller
@@ -58,9 +58,22 @@ const insertResult = async (req, res) => {
   const { email, score } = req.body;
 
   try {
-    const result = new Result({ email, score });
-    const resultData = await result.save();
-    res.json({ status: "ok", scoreData: resultData });
+    const userResult = await Result.findOne({ email });
+    const resultObj = { email, currentScore: score, highestScore: score };
+
+    if (!userResult) {
+      const result = new Result(resultObj);
+      const resultData = await result.save();
+      return res.json(resultData);
+    }
+
+    userResult.highestScore < score
+      ? (resultObj.highestScore = score)
+      : (resultObj.highestScore = userResult.highestScore);
+
+    await Result.updateOne({ email }, resultObj);
+
+    res.json(resultObj);
   } catch (error) {
     res.json({ error: "Some error has occurred" });
   }
