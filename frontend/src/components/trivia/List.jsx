@@ -1,8 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import ReactLoading from "react-loading";
-import { getTriviaData } from "../../redux/triviaDataReducer";
 import * as S from "../../styles/List";
 import Question from "./Question";
 import Answer from "./Answer";
