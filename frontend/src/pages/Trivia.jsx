@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ReactLoading from "react-loading";
 import { getTriviaData } from "../redux/triviaDataReducer";
-import { insertResult } from "../redux/ResultReducer";
+import { getUserResult, insertResult } from "../redux/ResultReducer";
 import List from "../components/trivia/List";
 import { loadUser } from "../redux/authReducer";
 import * as S from "../styles/Trivia";
+import { getResultList } from "../redux/ResultListReducer";
 
 const Trivia = () => {
   const dispatch = useDispatch();
@@ -25,10 +26,26 @@ const Trivia = () => {
 
   useEffect(() => {
     if (!!index && index === data.length) {
-      dispatch(insertResult({ email: userData.email, score: points }));
+      dispatch(
+        insertResult({
+          email: userData.email,
+          name: userData.name,
+          score: points,
+        })
+      );
+
+      // dispatch(getUserResult(userData.email));
       return navigate("/result");
     }
-  }, [data.length, dispatch, index, navigate, points, userData.email]);
+  }, [
+    data.length,
+    dispatch,
+    index,
+    navigate,
+    points,
+    userData.email,
+    userData.name,
+  ]);
 
   return (
     <S.Container>
