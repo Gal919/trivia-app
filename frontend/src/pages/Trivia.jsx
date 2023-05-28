@@ -3,11 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ReactLoading from "react-loading";
 import { getTriviaData } from "../redux/triviaDataReducer";
-import { getUserResult, insertResult } from "../redux/ResultReducer";
+import { insertResult } from "../redux/ResultReducer";
 import List from "../components/trivia/List";
 import { loadUser } from "../redux/authReducer";
 import * as S from "../styles/Trivia";
-import { getResultList } from "../redux/ResultListReducer";
 
 const Trivia = () => {
   const dispatch = useDispatch();
@@ -34,7 +33,6 @@ const Trivia = () => {
         })
       );
 
-      // dispatch(getUserResult(userData.email));
       return navigate("/result");
     }
   }, [
