@@ -55,11 +55,11 @@ const userLogin = async (req, res) => {
 
 //result controller
 const insertResult = async (req, res) => {
-  const { email, score } = req.body;
+  const { email, name, score } = req.body;
 
   try {
     const userResult = await Result.findOne({ email });
-    const resultObj = { email, currentScore: score, highestScore: score };
+    const resultObj = { email, name, currentScore: score, highestScore: score };
 
     if (!userResult) {
       const result = new Result(resultObj);
@@ -79,4 +79,36 @@ const insertResult = async (req, res) => {
   }
 };
 
-module.exports = { insertUser, userLogin, insertResult };
+const getUserResult = async (req, res) => {
+  const { email } = req.query;
+
+  try {
+    const userResult = await Result.findOne({ email });
+
+    res.json(userResult);
+  } catch (error) {
+    res.json({ error: "Some error has occurred" });
+  }
+};
+
+//resultlist controller
+const getResultList = async (req, res) => {
+  try {
+    const scoreList = await Result.find(
+      {},
+      { highestScore: 1, email: 1, name: 1 }
+    );
+
+    res.json(scoreList);
+  } catch (error) {
+    res.json({ error: "Some error has occurred" });
+  }
+};
+
+module.exports = {
+  insertUser,
+  userLogin,
+  insertResult,
+  getUserResult,
+  getResultList,
+};
