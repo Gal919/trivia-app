@@ -1,10 +1,9 @@
 import styled from "styled-components";
 
 export const Card = styled.div`
-  margin: 5px;
+  margin: 5px 0;
+  width: inherit;
   padding: 10px;
-  max-width: 70%;
-  min-width: 70%;
   text-align: center;
   font-size: 20px;
   border-radius: 12px;
