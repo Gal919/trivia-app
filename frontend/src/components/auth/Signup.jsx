@@ -20,7 +20,7 @@ const Signup = ({ setIsSignupPage }) => {
 
   useEffect(() => {
     if (registerStatus === "success") {
-      navigate("/trivia");
+      navigate("/settings");
     }
   }, [navigate, registerStatus]);
 
