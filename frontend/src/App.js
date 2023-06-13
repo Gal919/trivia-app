@@ -6,12 +6,17 @@ import Main from "./pages/Main";
 import Trivia from "./pages/Trivia";
 import store from "./redux/store";
 import Result from "./pages/Result";
+import Settings from "./pages/Settings";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
       element: <Main />,
+    },
+    {
+      path: "/settings",
+      element: <Settings />,
     },
     {
       path: "/trivia",
