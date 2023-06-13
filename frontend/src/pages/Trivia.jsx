@@ -13,7 +13,7 @@ const Trivia = () => {
   const navigate = useNavigate();
   const [points, setPoints] = useState(0);
   const userData = useSelector((state) => state.auth.data);
-  const { data, loading, success, index, error } = useSelector(
+  const { data, loading, dataSuccess, index, error } = useSelector(
     (state) => state.triviaData
   );
 
@@ -47,16 +47,19 @@ const Trivia = () => {
 
   return (
     <S.Container>
-      <h1>Trivia App</h1>
       {loading ? (
         <ReactLoading type="bubbles" color="#ffffff" height={64} width={64} />
       ) : (
-        success && (
+        dataSuccess && (
           <>
             <S.Header>
-              <h4>{`User: ${userData.name}`}</h4>
-              <p>{`${index + 1} / ${data.length}`}</p>
+              <h1>Trivia App</h1>
+              <S.SubHeader>
+                <h4>{`User: ${userData.name}`}</h4>
+                <p>{`Question: ${index + 1} / ${data.length}`}</p>
+              </S.SubHeader>
             </S.Header>
+
             <List
               data={data}
               index={index}
